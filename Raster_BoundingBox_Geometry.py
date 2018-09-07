@@ -1,4 +1,3 @@
-```
 # Python 3.6, gdal, ogr
 # Getting the extent of the DEM
 # ulx, uly is the upper left corner, lrx, lry is the lower right corner
@@ -27,4 +26,3 @@ def tif_enve_to_poly(tif_path):
     poly.AddGeometry(ring)
     
     return poly
-```
