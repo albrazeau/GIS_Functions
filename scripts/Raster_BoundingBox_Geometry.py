@@ -6,6 +6,25 @@
 import gdal
 import ogr
 
+# Faster, from local
+def GetTifBbox(tif):
+    '''Given a path to a local tif, return its bounding box'''
+    coords = gdal.Info(tif, format='json')['cornerCoordinates']
+    ul = coords['upperLeft']
+    ll = coords['lowerLeft']
+    ur = coords['lowerRight']
+    lr = coords['upperRight']
+    ring = ogr.Geometry(ogr.wkbLinearRing)
+    ring.AddPoint(ul[0], ul[1])
+    ring.AddPoint(ll[0], ll[1])
+    ring.AddPoint(ur[0], ur[1])
+    ring.AddPoint(lr[0], lr[1])
+    ring.AddPoint(ul[0], ul[1])
+    poly = ogr.Geometry(ogr.wkbPolygon)
+    poly.AddGeometry(ring)
+    
+    return poly
+
 # From local
 def tif_enve_to_poly(tif_path):
     src = gdal.Open(tif_path)
@@ -35,7 +54,7 @@ import boto3
 #s3 = boto3.resource('s3')
 #s3_client = boto3.client('s3')
 
-def tif_enve_to_poly(s3tif):
+def tif_enve_to_poly_s3(s3tif):
 
 # include these three lines if it is an s3 path not an s3 object
 #     bucket_name = s3path.split(r's3://')[1].split(r'/')[0]
